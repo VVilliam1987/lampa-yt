@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>Player</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
+  iframe { border: 0; width: 100%; height: 100%; display: block; }
+  #msg { color: #aaa; font: 16px sans-serif; padding: 24px; display: none; }
+</style>
+</head>
+<body>
+<iframe id="p" allowfullscreen
+        allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+        referrerpolicy="strict-origin-when-cross-origin"></iframe>
+<div id="msg">Не вказано адресу (?u=https://...).</div>
+<script>
+  // Використання: embed.html?u=<адреса сторінки плеєра, URL-encoded>[&sb=1]
+  // sb=1 — пісочниця: блокує спливаючі вікна й переходи верхньої сторінки
+  // (деякі плеєри з нею не працюють, тому типово вимкнено)
+  function param(name) {
+    var m = new RegExp('[?&]' + name + '=([^&]*)').exec(location.search);
+    return m ? decodeURIComponent(m[1].replace(/\+/g, ' ')) : '';
+  }
+  var u = param('u');
+  var f = document.getElementById('p');
+  if (/^https:\/\/[^\s"'<>]+$/i.test(u)) {
+    if (param('sb') === '1') {
+      f.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-presentation allow-forms');
+    }
+    f.src = u;
+  } else {
+    f.style.display = 'none';
+    document.getElementById('msg').style.display = 'block';
+  }
+</script>
+</body>
+</html>
